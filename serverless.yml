@@ -1,5 +1,7 @@
 service: s3dynamodb
 
+frameworkVersion: ">=1.1.0"
+
 custom:
   bucket: langara
 
