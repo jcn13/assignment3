@@ -1,0 +1,35 @@
+service: s3dynamodb
+
+custom:
+  bucket: langara
+
+provider:
+  name: aws
+  runtime: nodejs6.10
+  stage: dev
+  region: us-west-2
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - s3:PutObject
+        - dynamodb:PutItem
+        - dynamodb:Scan
+      Resource: "*"
+
+functions:
+  create:
+    handler: handler.create
+    events:
+      - s3:
+          bucket: ${self:custom.bucket}
+          event: s3:ObjectCreated:*
+      - s3:
+          bucket: ${self:custom.bucket}
+          event: s3:ObjectRemoved:*
+  list:
+    handler: list.list
+    events:
+      - http:
+          path: list
+          method: get
+          cors: true
