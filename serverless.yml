@@ -35,3 +35,26 @@ functions:
           path: list
           method: get
           cors: true
+  # Follow the instructions from assignment4.txt
+  # notify:
+  #   handler: handler.notify
+  #   events:
+  #     - stream: <arn from your table>
+
+resources:
+  Resources:
+    <your Table name>:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: <your Table name>
+        AttributeDefinitions:
+          - AttributeName: fileId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: fileId
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        StreamSpecification:
+          StreamViewType: NEW_IMAGE

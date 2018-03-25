@@ -3,6 +3,23 @@
 const AWS = require('aws-sdk')
 const dynamoDb = new AWS.DynamoDB.DocumentClient()
 
+const accountSid = 'your Sid'
+const authToken = 'your token'
+const twilio = require('twilio');
+const client = new twilio(accountSid, authToken)
+
+module.exports.notify = (event, context, callback) => {
+  const name = event['Records'][0]['dynamodb']['NewImage']
+  const filename = name.name.S
+  const func = name.event.S
+  client.messages.create({
+      body: `The file ${filename} was ${func} in your S3 bucket.`,
+      to: 'your telephone',  
+      from: 'your twilio telephone' 
+  })
+  .then((message) => console.log(message.sid))  
+}
+
 module.exports.create = (event, context, callback) => { 
   const bucket = event['Records'][0]['s3']['bucket']['name']
   const filename = event['Records'][0]['s3']['object']['key']
